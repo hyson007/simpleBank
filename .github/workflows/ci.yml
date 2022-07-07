@@ -38,8 +38,7 @@ jobs:
         go-version: 1.18
 
     - name: Install dependencies - migrate
-      run: |
-      sudo curl -L https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz | tar xvz -C /usr/local/bin/
+      run: sudo curl -L https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz | tar xvz -C /usr/local/bin/
 
     - name: Run migrations
       run: make migrateup
