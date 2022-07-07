@@ -74,6 +74,7 @@ func TestDeleteAccount(t *testing.T) {
 func TestListAccounts(t *testing.T) {
 	for i := 0; i < 5; i++ {
 		createRandomAccount(t)
+		time.Sleep(time.Millisecond * 100)
 	}
 	arg := ListAccountsParams{
 		Limit:  5,
