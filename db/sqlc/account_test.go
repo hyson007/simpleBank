@@ -78,7 +78,7 @@ func TestListAccounts(t *testing.T) {
 	}
 	arg := ListAccountsParams{
 		Limit:  5,
-		Offset: 5,
+		Offset: 0,
 	}
 	accounts, err := testQuery.ListAccounts(context.Background(), arg)
 	require.NoError(t, err)
