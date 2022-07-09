@@ -7,3 +7,9 @@ packages:
       engine: "postgresql"
       emit_json_tags: true
       emit_prepared_queries: true
+      emit_empty_slices: true
+      # emit_empty_slices if true, slice returned by :many queries will be empty 
+      # instead of nil
+      emit_interface: true
+      # emit_interface if true, will emit an interface file (querier.go) for the package
+
