@@ -6,21 +6,28 @@ import (
 	"fmt"
 )
 
+type Store interface {
+	TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error)
+	Querier // this is due to emit_interface set to true
+}
+
 //Store provides all functions to execute db queries and transaction
-type Store struct {
+//in order to use mockdb, we have to create an interface and this struct will
+//satisfy that interface
+type SimpleStore struct {
 	*Queries // embed all the func that Queries have
 	db       *sql.DB
 }
 
-func NewStore(db *sql.DB) *Store {
-	return &Store{
+func NewStore(db *sql.DB) Store {
+	return &SimpleStore{
 		db:      db,
 		Queries: New(db),
 	}
 }
 
 // execTx executes a function within a database Transaction
-func (store *Store) execTx(ctx context.Context, fn func(*Queries) error) error {
+func (store *SimpleStore) execTx(ctx context.Context, fn func(*Queries) error) error {
 	tx, err := store.db.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -66,7 +73,7 @@ var txKey = struct{}{}
 // transferTX performs a money transfer from one account to another account
 // it will create a new transfer record
 // add account entries, and update account balance within a single db transaction
-func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
+func (store *SimpleStore) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
 	var result TransferTxResult
 
 	err := store.execTx(ctx, func(q *Queries) error {

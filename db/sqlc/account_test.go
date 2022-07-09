@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"testing"
 	"time"
 
@@ -14,8 +15,11 @@ import (
 //first, the right place to do that is in main_test.go
 
 func createRandomAccount(t *testing.T) Account {
+	// since we now have foreign key constraint, we can't just use a random owner for account
+	user := createRandomUser(t)
+
 	arg := CreateAccountParams{
-		Owner:    util.RandomOwner(),
+		Owner:    user.Username,
 		Balance:  util.RandomMoney(),
 		Currency: util.RandomCurrency(),
 	}
@@ -72,19 +76,23 @@ func TestDeleteAccount(t *testing.T) {
 }
 
 func TestListAccounts(t *testing.T) {
+	var lastAccount Account
 	for i := 0; i < 5; i++ {
-		createRandomAccount(t)
-		time.Sleep(time.Millisecond * 100)
+		lastAccount = createRandomAccount(t)
+		// time.Sleep(time.Millisecond * 100)
 	}
 	arg := ListAccountsParams{
+		Owner:  lastAccount.Owner,
 		Limit:  5,
 		Offset: 0,
 	}
 	accounts, err := testQuery.ListAccounts(context.Background(), arg)
+	fmt.Println(accounts)
 	require.NoError(t, err)
-	require.Len(t, accounts, 5)
+	require.NotEmpty(t, accounts)
 	for _, acct := range accounts {
 		require.NotEmpty(t, acct)
+		require.Equal(t, lastAccount.Owner, acct.Owner)
 	}
 
 }
