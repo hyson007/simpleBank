@@ -64,6 +64,7 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 }
 
 func (s *Server) Start(addr string) error {
+	fmt.Println("starting server")
 	return s.router.Run(addr)
 }
 

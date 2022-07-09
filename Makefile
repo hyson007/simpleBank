@@ -1,5 +1,5 @@
 timescaledb :
-	docker run -d --name timescaledb -p 5432:5432 \
+	docker run -d --name timescaledb --network simplebankPostgres -p 5432:5432 \
 -e POSTGRES_USER=dbusername -e POSTGRES_PASSWORD=dbpassword timescale/timescaledb:latest-pg14
 
 createdb:
