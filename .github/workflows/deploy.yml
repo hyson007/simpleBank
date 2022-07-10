@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v3
+    
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -24,7 +26,7 @@ jobs:
     - name: Load Secret and save to app.env
       run: aws secretsmanager get-secret-value --secret-id simpleBank --query SecretString --output text | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]' > app.env
   
-    - uses: actions/checkout@v3
+    
 
     - name: Build, tag, and push docker image to Amazon ECR
       env:
