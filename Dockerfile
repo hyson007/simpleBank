@@ -6,6 +6,7 @@ WORKDIR /app
 COPY . .
 # in this case, the main is inside the /app directory
 RUN go build -o main main.go
+RUN ls /app/app.env
 # install curl
 RUN apk add curl
 # install migrate
